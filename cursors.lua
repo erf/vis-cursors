@@ -42,8 +42,11 @@ end
 function module.quit()
 	local f = io.open(cursors_path, 'w+')
 	if f == nil then return end
-	for k, v in pairs(cursors) do
-		f:write(string.format('%s %d\n', k, v))
+	local a = {}
+	for k in pairs(cursors) do table.insert(a, k) end
+	table.sort(a)
+	for i,k in ipairs(a) do 
+		f:write(string.format('%s %d\n', k, cursors[k]))
 	end
 	f:close()
 end
