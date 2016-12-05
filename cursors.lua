@@ -2,12 +2,6 @@ local module = {}
 local cursors = {}
 local cursors_path = string.format('%s/.cursors', os.getenv('HOME'))
 
-function print_cursors() 
-	for k, v in pairs(cursors) do
-		io.write(string.format('%s %d', k, v))
-	end
-end
-
 function set_pos(win)
 	if win.file == nil or win.file.path == nil then return end
 	local pos = cursors[win.file.path]
