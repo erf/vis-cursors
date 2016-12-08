@@ -45,20 +45,9 @@ function quit()
 	f:close()
 end
 
-vis.events.subscribe(vis.events.INIT, function()
-	init()
-end)
-
-vis.events.subscribe(vis.events.WIN_OPEN, function(win)
-	win_open(win)
-end)
-
-vis.events.subscribe(vis.events.WIN_CLOSE, function(win)
-	win_close(win)
-end)
-
-vis.events.subscribe(vis.events.QUIT, function()
-	quit()
-end)
+vis.events.subscribe(vis.events.INIT, init)
+vis.events.subscribe(vis.events.WIN_OPEN, win_open)
+vis.events.subscribe(vis.events.WIN_CLOSE, win_close)
+vis.events.subscribe(vis.events.QUIT, quit)
 
 return module
