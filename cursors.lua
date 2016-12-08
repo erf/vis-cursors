@@ -2,14 +2,14 @@ local module = {}
 local cursors = {}
 module.cursors_path = string.format('%s/.cursors', os.getenv('HOME'))
 
-function set_pos(win)
+function set_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
 	local pos = cursors[win.file.path]
 	if pos == nil then return end
 	win.cursor.pos = tonumber(pos)
 end
 
-function module.start()
+function init()
 	cursors = {}
 	local f = io.open(module.cursors_path)
 	if f == nil then return end
@@ -20,20 +20,20 @@ function module.start()
 	end
 	f:close()
 	for win in vis:windows() do
-		set_pos(win)
+		set_cursor_pos(win)
 	end
 end
 
-function module.win_open(win)
-	set_pos(win)
+function win_open(win)
+	set_cursor_pos(win)
 end
 
-function module.win_close(win)
+function win_close(win)
 	if win.file == nil or win.file.path == nil then return end
 	cursors[win.file.path] = win.cursor.pos
 end
 
-function module.quit()
+function quit()
 	local f = io.open(module.cursors_path, 'w+')
 	if f == nil then return end
 	local a = {}
@@ -44,5 +44,21 @@ function module.quit()
 	end
 	f:close()
 end
+
+vis.events.subscribe(vis.events.INIT, function()
+	init()
+end)
+
+vis.events.subscribe(vis.events.WIN_OPEN, function(win)
+	win_open(win)
+end)
+
+vis.events.subscribe(vis.events.WIN_CLOSE, function(win)
+	win_close(win)
+end)
+
+vis.events.subscribe(vis.events.QUIT, function()
+	quit()
+end)
 
 return module
