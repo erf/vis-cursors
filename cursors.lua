@@ -9,7 +9,7 @@ function set_cursor_pos(win)
 	win.cursor.pos = tonumber(pos)
 end
 
-function init()
+function on_init()
 	cursors = {}
 	local f = io.open(module.cursors_path)
 	if f == nil then return end
@@ -24,16 +24,16 @@ function init()
 	end
 end
 
-function win_open(win)
+function on_win_open(win)
 	set_cursor_pos(win)
 end
 
-function win_close(win)
+function on_win_close(win)
 	if win.file == nil or win.file.path == nil then return end
 	cursors[win.file.path] = win.cursor.pos
 end
 
-function quit()
+function on_quit()
 	local f = io.open(module.cursors_path, 'w+')
 	if f == nil then return end
 	local a = {}
@@ -45,9 +45,9 @@ function quit()
 	f:close()
 end
 
-vis.events.subscribe(vis.events.INIT, init)
-vis.events.subscribe(vis.events.WIN_OPEN, win_open)
-vis.events.subscribe(vis.events.WIN_CLOSE, win_close)
-vis.events.subscribe(vis.events.QUIT, quit)
+vis.events.subscribe(vis.events.INIT, on_init)
+vis.events.subscribe(vis.events.WIN_OPEN, on_win_open)
+vis.events.subscribe(vis.events.WIN_CLOSE, on_win_close)
+vis.events.subscribe(vis.events.QUIT, on_quit)
 
 return module
