@@ -9,6 +9,16 @@ function set_cursor_pos(win)
 	win.cursor.pos = tonumber(pos)
 end
 
+function file_exists(path)
+	local f = io.open(path)
+	if f == nil then 
+		return false
+	else 
+		io.close(f) 
+		return true 
+	end
+end	
+
 function on_init()
 	cursors = {}
 	local f = io.open(module.cursors_path)
@@ -30,7 +40,9 @@ end
 
 function on_win_close(win)
 	if win.file == nil or win.file.path == nil then return end
-	cursors[win.file.path] = win.cursor.pos
+	if file_exists(win.file.path) then 
+		cursors[win.file.path] = win.cursor.pos
+	end
 end
 
 function on_quit()
