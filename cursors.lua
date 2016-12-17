@@ -11,11 +11,8 @@ end
 
 function file_exists(path)
 	local f = io.open(path)
-	if f == nil then 
-		return false
-	else 
-		f:close() 
-		return true 
+	if f == nil then return false
+	else f:close() return true 
 	end
 end	
 
