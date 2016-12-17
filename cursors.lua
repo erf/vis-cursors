@@ -14,12 +14,12 @@ function file_exists(path)
 	if f == nil then 
 		return false
 	else 
-		io.close(f) 
+		f:close() 
 		return true 
 	end
 end	
 
-function on_init()
+function load_cursors()
 	cursors = {}
 	local f = io.open(module.cursors_path)
 	if f == nil then return end
@@ -34,18 +34,7 @@ function on_init()
 	end
 end
 
-function on_win_open(win)
-	set_cursor_pos(win)
-end
-
-function on_win_close(win)
-	if win.file == nil or win.file.path == nil then return end
-	if file_exists(win.file.path) then 
-		cursors[win.file.path] = win.cursor.pos
-	end
-end
-
-function on_quit()
+function save_cursors()
 	local f = io.open(module.cursors_path, 'w+')
 	if f == nil then return end
 	local a = {}
@@ -55,6 +44,24 @@ function on_quit()
 		f:write(string.format('%s %d\n', k, cursors[k]))
 	end
 	f:close()
+end
+
+function on_init()
+	load_cursors()
+end
+
+function on_win_open(win)
+	set_cursor_pos(win)
+end
+
+function on_win_close(win)
+	if win.file == nil or win.file.path == nil then return end
+	if not file_exists(win.file.path) then return end
+	cursors[win.file.path] = win.cursor.pos
+end
+
+function on_quit()
+	save_cursors()
 end
 
 vis.events.subscribe(vis.events.INIT, on_init)
