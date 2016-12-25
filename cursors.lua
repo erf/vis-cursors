@@ -7,6 +7,7 @@ function set_cursor_pos(win)
 	local pos = cursors[win.file.path]
 	if pos == nil then return end
 	win.cursor.pos = tonumber(pos)
+	vis:feedkeys("<window-redraw-center>")
 end
 
 function file_exists(path)
