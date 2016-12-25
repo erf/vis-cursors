@@ -1,7 +1,8 @@
 # vis-cursors
-A lua module for remembering cursor positions in the [vis editor](https://github.com/martanne/vis).
+Remembering cursor positions in the [vis editor](https://github.com/martanne/vis).
 
 # How to 
-Link `cursors.lua` to your `.config/vis/plugins` folder and `require('plugins/cursors')` in your `visrc.lua` file.
+1. `ln -s cursors.lua .config/vis/plugins`
+2. `require('plugins/cursors')` in `visrc.lua`
 
-`module.cursors_path` defaults to `~/.cursors`, and saves information about your cursors positions.
+`module.cursors_path` defaults to `~/.cursors`, and store your cursor positions. You can overwrite this variable.
