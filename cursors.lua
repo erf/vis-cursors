@@ -1,6 +1,6 @@
 local module = {}
 local cursors = {}
-module.cursors_path = string.format('%s/.cursors', os.getenv('HOME'))
+module.path = string.format('%s/.cursors', os.getenv('HOME'))
 
 function set_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
@@ -19,7 +19,7 @@ end
 
 function load_cursors()
 	cursors = {}
-	local f = io.open(module.cursors_path)
+	local f = io.open(module.path)
 	if f == nil then return end
 	for line in f:lines() do
 		for k, v in string.gmatch(line, '(.+)%s(%d+)') do
@@ -33,7 +33,7 @@ function load_cursors()
 end
 
 function save_cursors()
-	local f = io.open(module.cursors_path, 'w+')
+	local f = io.open(module.path, 'w+')
 	if f == nil then return end
 	local a = {}
 	for k in pairs(cursors) do table.insert(a, k) end
