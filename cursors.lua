@@ -6,7 +6,7 @@ function set_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
 	local pos = cursors[win.file.path]
 	if pos == nil then return end
-	win.cursor.pos = tonumber(pos)
+	win.selection.pos = tonumber(pos)
 	vis:feedkeys("zz")
 end
 
@@ -55,7 +55,7 @@ end
 function on_win_close(win)
 	if win.file == nil or win.file.path == nil then return end
 	if not file_exists(win.file.path) then return end
-	cursors[win.file.path] = win.cursor.pos
+	cursors[win.file.path] = win.selection.pos
 end
 
 function on_quit()
