@@ -44,27 +44,15 @@ function save_cursors()
 	f:close()
 end
 
-function on_init()
-	load_cursors()
-end
-
-function on_win_open(win)
-	set_cursor_pos(win)
-end
-
-function on_win_close(win)
+function win_close(win)
 	if win.file == nil or win.file.path == nil then return end
 	if not file_exists(win.file.path) then return end
 	cursors[win.file.path] = win.selection.pos
 end
 
-function on_quit()
-	save_cursors()
-end
-
-vis.events.subscribe(vis.events.INIT, on_init)
-vis.events.subscribe(vis.events.WIN_OPEN, on_win_open)
-vis.events.subscribe(vis.events.WIN_CLOSE, on_win_close)
-vis.events.subscribe(vis.events.QUIT, on_quit)
+vis.events.subscribe(vis.events.INIT, load_cursors)
+vis.events.subscribe(vis.events.WIN_OPEN, set_cursor_pos)
+vis.events.subscribe(vis.events.WIN_CLOSE, win_close)
+vis.events.subscribe(vis.events.QUIT, save_cursors)
 
 return module
