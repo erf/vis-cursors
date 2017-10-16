@@ -1,6 +1,6 @@
 local module = {}
 local cursors = {}
-module.path = string.format('%s/.cursors', os.getenv('HOME'))
+module.path = os.getenv('HOME') .. '/.cursors'
 
 function set_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
