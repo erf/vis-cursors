@@ -2,7 +2,7 @@ local module = {}
 local cursors = {}
 module.path = os.getenv('HOME') .. '/.cursors'
 
-function set_cursor_pos(win)
+function apply_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
 	local pos = cursors[win.file.path]
 	if pos == nil then return end
@@ -17,7 +17,7 @@ function file_exists(path)
 	end
 end	
 
-function load_cursors()
+function read_cursors()
 	cursors = {}
 	local f = io.open(module.path)
 	if f == nil then return end
@@ -28,11 +28,11 @@ function load_cursors()
 	end
 	f:close()
 	for win in vis:windows() do
-		set_cursor_pos(win)
+		apply_cursor_pos(win)
 	end
 end
 
-function save_cursors()
+function write_cursors()
 	local f = io.open(module.path, 'w+')
 	if f == nil then return end
 	local a = {}
@@ -44,15 +44,15 @@ function save_cursors()
 	f:close()
 end
 
-function win_close(win)
+function set_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
 	if not file_exists(win.file.path) then return end
 	cursors[win.file.path] = win.selection.pos
 end
 
-vis.events.subscribe(vis.events.INIT, load_cursors)
-vis.events.subscribe(vis.events.WIN_OPEN, set_cursor_pos)
-vis.events.subscribe(vis.events.WIN_CLOSE, win_close)
-vis.events.subscribe(vis.events.QUIT, save_cursors)
+vis.events.subscribe(vis.events.INIT, read_cursors)
+vis.events.subscribe(vis.events.WIN_OPEN, apply_cursor_pos)
+vis.events.subscribe(vis.events.WIN_CLOSE, set_cursor_pos)
+vis.events.subscribe(vis.events.QUIT, write_cursors)
 
 return module
