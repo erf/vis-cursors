@@ -1,6 +1,6 @@
-local module = {}
+local M = {}
 local cursors = {}
-module.path = os.getenv('HOME') .. '/.cursors'
+M.path = os.getenv('HOME') .. '/.cursors'
 
 function apply_cursor_pos(win)
 	if win.file == nil or win.file.path == nil then return end
@@ -19,7 +19,7 @@ end
 
 function read_cursors()
 	cursors = {}
-	local f = io.open(module.path)
+	local f = io.open(M.path)
 	if f == nil then return end
 	for line in f:lines() do
 		for k, v in string.gmatch(line, '(.+)%s(%d+)') do
@@ -33,7 +33,7 @@ function read_cursors()
 end
 
 function write_cursors()
-	local f = io.open(module.path, 'w+')
+	local f = io.open(M.path, 'w+')
 	if f == nil then return end
 	local a = {}
 	for k in pairs(cursors) do table.insert(a, k) end
@@ -55,4 +55,4 @@ vis.events.subscribe(vis.events.WIN_OPEN, apply_cursor_pos)
 vis.events.subscribe(vis.events.WIN_CLOSE, set_cursor_pos)
 vis.events.subscribe(vis.events.QUIT, write_cursors)
 
-return module
+return M
