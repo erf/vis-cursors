@@ -1,7 +1,7 @@
 # vis-cursors
-Remember cursor position per file, for the [vis editor](https://github.com/martanne/vis).
+Remember cursor positions per file. A plugin for the [vis editor](https://github.com/martanne/vis).
 
 # Usage
-Load `vis-cursors` in your `visrc.lua` file ( see [Plugins](https://github.com/martanne/vis/wiki/Plugins) ).
+Require `vis-cursors` in your `visrc.lua` file ( see [Plugins](https://github.com/martanne/vis/wiki/Plugins) ).
 
-Cursor positions are stored in `$HOME/.cursors`, or you can set the `M.path` variable.
+Cursor positions are stored in `$HOME/.cursors`, or set another path using `M.path`.
