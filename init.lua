@@ -45,11 +45,11 @@ function write_cursors()
 	end
 	table.sort(paths)
 	-- buffer cursors string
-    local t = {}
+	local t = {}
 	for i, path in ipairs(paths) do 
-      table.insert(t, string.format('%s %d', path, cursors[path]))
-    end
-    local s = table.concat(t, '\n')
+		table.insert(t, string.format('%s %d', path, cursors[path]))
+	end
+	local s = table.concat(t, '\n')
 	f:write(s)
 	f:close()
 end
