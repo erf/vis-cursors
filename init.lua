@@ -26,26 +26,31 @@ function read_cursors()
 	cursors = {}
 	local f = io.open(M.path)
 	if f == nil then return end
+	-- read positions per file path
 	for line in f:lines() do
-		for k, v in string.gmatch(line, '(.+)%s(%d+)') do
-			cursors[k] = v
+		for path, pos in string.gmatch(line, '(.+)%s(%d+)') do
+			cursors[path] = pos
 		end 
 	end
 	f:close()
-	for win in vis:windows() do
-		apply_cursor_pos(win)
-	end
 end
 
 function write_cursors()
 	local f = io.open(M.path, 'w+')
 	if f == nil then return end
-	local a = {}
-	for k in pairs(cursors) do table.insert(a, k) end
-	table.sort(a)
-	for i,k in ipairs(a) do 
-		f:write(string.format('%s %d\n', k, cursors[k]))
+	-- sort paths
+	local paths = {}
+	for path in pairs(cursors) do 
+		table.insert(paths, path) 
 	end
+	table.sort(paths)
+	-- buffer cursors string
+    local t = {}
+	for i, path in ipairs(paths) do 
+      table.insert(t, string.format('%s %d', path, cursors[path]))
+    end
+    local s = table.concat(t, '\n')
+	f:write(s)
 	f:close()
 end
 
