@@ -6,46 +6,54 @@ local BASE = XDG_CACHE_HOME or HOME
 
 M.path = BASE .. '/.cursors'
 
-function apply_cursor_pos(win)
-	if win.file == nil or win.file.path == nil then return end
+local apply_cursor_pos = function(win)
+	if win.file == nil or win.file.path == nil then
+		return
+	end
 	local pos = cursors[win.file.path]
-	if pos == nil then return end
+	if pos == nil then
+		return
+	end
 	win.selection.pos = tonumber(pos)
 	vis:feedkeys("zz")
 end
 
-function file_exists(path)
+local file_exists = function(path)
 	local f = io.open(path)
-	if f == nil then return false
-	else f:close() return true 
+	if f == nil then
+		return false
 	end
-end	
+	f:close()
+	return true
+end
 
-function read_cursors()
+local read_cursors = function()
 	cursors = {}
 	local f = io.open(M.path)
-	if f == nil then return end
+	if f == nil then
+		return
+	end
 	-- read positions per file path
 	for line in f:lines() do
 		for path, pos in string.gmatch(line, '(.+)%s(%d+)') do
 			cursors[path] = pos
-		end 
+		end
 	end
 	f:close()
 end
 
-function write_cursors()
+local write_cursors = function()
 	local f = io.open(M.path, 'w+')
 	if f == nil then return end
 	-- sort paths
 	local paths = {}
-	for path in pairs(cursors) do 
-		table.insert(paths, path) 
+	for path in pairs(cursors) do
+		table.insert(paths, path)
 	end
 	table.sort(paths)
 	-- buffer cursors string
 	local t = {}
-	for i, path in ipairs(paths) do 
+	for i, path in ipairs(paths) do
 		table.insert(t, string.format('%s %d', path, cursors[path]))
 	end
 	local s = table.concat(t, '\n')
@@ -53,9 +61,13 @@ function write_cursors()
 	f:close()
 end
 
-function set_cursor_pos(win)
-	if win.file == nil or win.file.path == nil then return end
-	if not file_exists(win.file.path) then return end
+local set_cursor_pos = function(win)
+	if win.file == nil or win.file.path == nil then
+		return
+	end
+	if not file_exists(win.file.path) then
+		return
+	end
 	cursors[win.file.path] = win.selection.pos
 end
 
