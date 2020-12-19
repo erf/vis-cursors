@@ -1,8 +1,8 @@
-# vis-cursors
+# vis-cursors ✍️
 
-Remember cursor positions per file. 
 
-Cursors are stored in `XDG_CACHE_HOME/cursors`, `$HOME/.cursors` or set via `M.path`.
+A [vis](https://github.com/martanne/vis) [plugin](https://github.com/martanne/vis/wiki/Plugins) for saving cursor position per file.
 
-A [plugin](https://github.com/martanne/vis/wiki/Plugins) for the [vis](https://github.com/martanne/vis) text editor.
+Default save path is `{XDG_CACHE_HOME|HOME}/.cursors`
 
+Set a custom path with `M.path`
