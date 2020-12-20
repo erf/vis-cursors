@@ -71,10 +71,9 @@ local set_cursor_pos = function(win)
 	cursors[win.file.path] = win.selection.pos
 end
 
+vis.events.subscribe(vis.events.INIT, read_cursors)
 vis.events.subscribe(vis.events.WIN_OPEN, apply_cursor_pos)
 vis.events.subscribe(vis.events.WIN_CLOSE, set_cursor_pos)
 vis.events.subscribe(vis.events.QUIT, write_cursors)
-
-read_cursors()
 
 return M
