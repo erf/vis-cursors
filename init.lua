@@ -1,10 +1,14 @@
 local M = {}
 local cursors = {}
-local HOME = os.getenv('HOME')
-local XDG_CACHE_HOME = os.getenv('XDG_CACHE_HOME')
-local BASE = XDG_CACHE_HOME or HOME
 
-M.path = BASE .. '/.cursors'
+local get_default_cache_path = function()
+	local HOME = os.getenv('HOME')
+	local XDG_CACHE_HOME = os.getenv('XDG_CACHE_HOME')
+	local BASE = XDG_CACHE_HOME or HOME
+	return BASE .. '/.cursors'
+end
+
+M.path = get_default_cache_path()
 
 local apply_cursor_pos = function(win)
 	if win.file == nil or win.file.path == nil then
