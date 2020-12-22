@@ -5,7 +5,7 @@ local get_default_cache_path = function()
 	local HOME = os.getenv('HOME')
 	local XDG_CACHE_HOME = os.getenv('XDG_CACHE_HOME')
 	local BASE = XDG_CACHE_HOME or HOME
-	return BASE .. '/.vis-cursors'
+	return BASE .. '/.vis-cursors.csv'
 end
 
 M.path = get_default_cache_path()
@@ -39,7 +39,7 @@ local read_cursors = function()
 	end
 	-- read positions per file path
 	for line in f:lines() do
-		for path, pos in string.gmatch(line, '(.+)%s(%d+)') do
+		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
 			cursors[path] = pos
 		end
 	end
@@ -58,7 +58,7 @@ local write_cursors = function()
 	-- buffer cursors string
 	local t = {}
 	for i, path in ipairs(paths) do
-		table.insert(t, string.format('%s %d', path, cursors[path]))
+		table.insert(t, string.format('%s,%d', path, cursors[path]))
 	end
 	local s = table.concat(t, '\n')
 	f:write(s)
