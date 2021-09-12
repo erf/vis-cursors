@@ -4,7 +4,8 @@ local cursors = {}
 local get_default_cache_path = function()
 	local HOME = os.getenv('HOME')
 	local XDG_CACHE_HOME = os.getenv('XDG_CACHE_HOME')
-	local BASE = XDG_CACHE_HOME or HOME
+	local HOME_CACHE = HOME .. '/.cache'
+	local BASE = XDG_CACHE_HOME or HOME_CACHE
 	return BASE .. '/.vis-cursors.csv'
 end
 
