@@ -1,5 +1,7 @@
 local M = {}
 local cursors = {}
+local files   = {}
+local maxfiles = 1000
 
 local get_default_cache_path = function()
 	local HOME = os.getenv('HOME')
@@ -33,14 +35,18 @@ end
 
 local read_cursors = function()
 	cursors = {}
+	files   = {}
 	local f = io.open(M.path)
 	if f == nil then
 		return
 	end
 	-- read positions per file path
+	local n = 2
 	for line in f:lines() do
 		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
 			cursors[path] = pos
+			files[n] = path
+			n = n+1
 		end
 	end
 	f:close()
@@ -49,29 +55,29 @@ end
 local write_cursors = function()
 	local f = io.open(M.path, 'w+')
 	if f == nil then return end
-	-- sort paths
-	local paths = {}
-	for path in pairs(cursors) do
-		table.insert(paths, path)
+	for n=1,maxfiles do
+		if files[n] then
+			f:write(string.format('%s,%d\n', files[n], cursors[files[n]]))
+		end
 	end
-	table.sort(paths)
-	-- buffer cursors string
-	local t = {}
-	for i, path in ipairs(paths) do
-		table.insert(t, string.format('%s,%d', path, cursors[path]))
-	end
-	local s = table.concat(t, '\n')
-	f:write(s)
 	f:close()
 end
 
 local set_cursor_pos = function(win)
+	read_cursors() -- reread M.path, which may be changed meanwhile by another vis instance
 	if win.file == nil or win.file.path == nil then
 		return
 	end
 	if not file_exists(win.file.path) then
 		return
 	end
+	for key,val in pairs(files) do
+		if val == win.file.path then
+			files[key] = nil
+			maxfiles = maxfiles+1
+		end
+	end
+	files[1] = win.file.path
 	cursors[win.file.path] = win.selection.pos
 end
 
