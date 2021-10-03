@@ -91,6 +91,9 @@ local set_cursor_pos = function(win)
 	if not file_exists(win.file.path) then
 		return
 	end
+ 	-- read cursors file in case other vis processes edited files
+ 	read_cursors()
+ 	-- set cursor pos for current file path
 	cursors[win.file.path] = win.selection.pos
 end
 
