@@ -40,7 +40,7 @@ local read_cursors = function()
 	local prev_dir
 	for line in f:lines() do
 		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
-			-- append prev dir if '@' (compressed)
+			-- uncompress prev dir if '@'
 			local repeat_dir = string.match(path, '^%@')
 			if repeat_dir then
 				local filename = string.match(path, '^.*/(.*)')
@@ -76,7 +76,7 @@ local write_cursors = function()
 	local prev_dir
 	for i, path in ipairs(paths) do
 		local dir = string.match(path, '(.*/)')
-		-- simplify prev dirs to '@'
+		-- compress dir to just '@' if same as prev dir
 		if dir == prev_dir then
 			local filename = string.match(path, '^.*/(.*)')
 			table.insert(t, string.format('@/%s,%d', filename, cursors[path]))
