@@ -1,7 +1,7 @@
 local M = {}
 local cursors = {}
 local files   = {}
-local maxfiles = 1000
+M.maxcursors  = 0
 
 local get_default_cache_path = function()
 	local HOME = os.getenv('HOME')
@@ -41,7 +41,7 @@ local read_cursors = function()
 		return
 	end
 	-- read positions per file path
-	local n = 2
+	local n = 2 -- [n] is reserved to the current file
 	for line in f:lines() do
 		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
 			cursors[path] = pos
@@ -55,7 +55,7 @@ end
 local write_cursors = function()
 	local f = io.open(M.path, 'w+')
 	if f == nil then return end
-	for n=1,maxfiles do
+	for n=1,M.maxcursors do
 		if files[n] then
 			f:write(string.format('%s,%d\n', files[n], cursors[files[n]]))
 		end
@@ -74,12 +74,17 @@ local set_cursor_pos = function(win)
 	for key,val in pairs(files) do
 		if val == win.file.path then
 			files[key] = nil
-			maxfiles = maxfiles+1
+			M.maxcursors = M.maxcursors+1
 		end
 	end
 	files[1] = win.file.path
 	cursors[win.file.path] = win.selection.pos
 end
+
+vis:option_register("maxcursors", "string", function(value, toggle)
+	M.maxcursors = value
+	return true
+end, "The number of cursor positions to store")
 
 vis.events.subscribe(vis.events.INIT, read_cursors)
 vis.events.subscribe(vis.events.WIN_OPEN, apply_cursor_pos)
