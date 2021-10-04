@@ -50,6 +50,9 @@ local read_cursors = function()
 		end
 	end
 	f:close()
+	if M.maxcursors == 0 then  -- store all files
+		M.maxcursors = n
+	end
 end
 
 local write_cursors = function()
