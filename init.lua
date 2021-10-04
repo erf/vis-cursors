@@ -22,21 +22,12 @@ local apply_cursor_pos = function(win)
 	vis:feedkeys("zz")
 end
 
-local file_exists = function(path)
-	local f = io.open(path)
-	if f == nil then
-		return false
-	end
-	f:close()
-	return true
-end
-
 local read_cursors = function()
 	local f = io.open(M.path)
 	if f == nil then
 		return
 	end
-	-- read positions per file path
+	-- read cursor positions per file path
 	local prev_dir
 	for line in f:lines() do
 		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
@@ -64,13 +55,17 @@ local write_cursors = function()
  	read_cursors()
 
 	local f = io.open(M.path, 'w+')
-	if f == nil then return end
+	if f == nil then
+		return
+	end
+
 	-- sort paths
 	local paths = {}
 	for path in pairs(cursors) do
 		table.insert(paths, path)
 	end
 	table.sort(paths)
+
 	-- buffer cursors string
 	local t = {}
 	local prev_dir
@@ -92,9 +87,6 @@ end
 
 local set_cursor_pos = function(win)
 	if win.file == nil or win.file.path == nil then
-		return
-	end
-	if not file_exists(win.file.path) then
 		return
 	end
  	-- set cursor pos for current file path
