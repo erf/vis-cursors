@@ -32,7 +32,6 @@ local file_exists = function(path)
 end
 
 local read_cursors = function()
-	cursors = {}
 	local f = io.open(M.path)
 	if f == nil then
 		return
@@ -50,13 +49,20 @@ local read_cursors = function()
 				local dir = string.match(path, '(.*/)')
 				prev_dir = dir
 			end
-			cursors[path] = pos
+			-- only set cursor paths not already set in the current process
+			if not cursors[path] then
+				cursors[path] = pos
+			end 
 		end
 	end
 	f:close()
 end
 
 local write_cursors = function()
+
+ 	-- read cursors file in case other vis processes updated it
+ 	read_cursors()
+
 	local f = io.open(M.path, 'w+')
 	if f == nil then return end
 	-- sort paths
@@ -91,8 +97,6 @@ local set_cursor_pos = function(win)
 	if not file_exists(win.file.path) then
 		return
 	end
- 	-- read cursors file in case other vis processes edited files
- 	read_cursors()
  	-- set cursor pos for current file path
 	cursors[win.file.path] = win.selection.pos
 end
