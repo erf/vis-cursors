@@ -27,23 +27,10 @@ local read_cursors = function()
 	if f == nil then
 		return
 	end
-	-- read cursor positions per file path
-	local prev_dir
+	-- read positions per file path
 	for line in f:lines() do
 		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
-			-- uncompress prev dir if '@'
-			local repeat_dir = string.match(path, '^%@')
-			if repeat_dir then
-				local filename = string.match(path, '^.*/(.*)')
-				path = prev_dir .. filename
-			else
-				local dir = string.match(path, '(.*/)')
-				prev_dir = dir
-			end
-			-- only set cursor paths not already set in the current process
-			if not cursors[path] then
-				cursors[path] = pos
-			end 
+			cursors[path] = pos
 		end
 	end
 	f:close()
@@ -68,17 +55,8 @@ local write_cursors = function()
 
 	-- buffer cursors string
 	local t = {}
-	local prev_dir
 	for i, path in ipairs(paths) do
-		local dir = string.match(path, '(.*/)')
-		-- compress dir to just '@' if same as prev dir
-		if dir == prev_dir then
-			local filename = string.match(path, '^.*/(.*)')
-			table.insert(t, string.format('@/%s,%d', filename, cursors[path]))
-		else
-			prev_dir = dir
-			table.insert(t, string.format('%s,%d', path, cursors[path]))
-		end
+		table.insert(t, string.format('%s,%d', path, cursors[path]))
 	end
 	local s = table.concat(t, '\n')
 	f:write(s)
