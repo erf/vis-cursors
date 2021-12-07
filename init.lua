@@ -38,9 +38,6 @@ end
 
 local write_cursors = function()
 
- 	-- read cursors file in case other vis processes updated it
- 	read_cursors()
-
 	local f = io.open(M.path, 'w+')
 	if f == nil then
 		return
