@@ -16,14 +16,15 @@ M.path = get_default_cache_path()
 -- default maxsize
 M.maxsize = 1000
 
--- read cursors from file on init
-local on_init = function()
+function read_files()
 
 	-- read file
 	local f = io.open(M.path)
 	if f == nil then
 		return
 	end
+
+	files = {}
 
 	-- read positions per file path
 	for line in f:lines() do
@@ -36,23 +37,17 @@ local on_init = function()
 	f:close()
 end
 
+-- read cursors from file on init
+local on_init = function()
+	read_files()
+end
+
 -- apply cursor pos on win open
 local on_win_open = function(win)
 
 	if win.file == nil or win.file.path == nil then
 		return
 	end
-
-	-- remove old occurences of path
-	for i, path in ipairs(files) do
-		if path == win.file.path then
-			table.remove(files, i)
-			break
-		end
-	end
-
-	-- insert current path to top of files
-	table.insert(files, 1, win.file.path)
 
 	-- init cursor path if nil
 	local pos = cursors[win.file.path]
@@ -71,9 +66,23 @@ end
 -- set cursor pos on close
 local on_win_close = function(win)
 
+	-- re-read files in case they've changed
+	read_files()
+
+	-- remove old occurences of current path
+	for i, path in ipairs(files) do
+		if path == win.file.path then
+			table.remove(files, i)
+		end
+	end
+
+	-- insert current path to top of files
+	table.insert(files, 1, win.file.path)
+
 	if win.file == nil or win.file.path == nil then
 		return
 	end
+
  	-- set cursor pos for current file path
 	cursors[win.file.path] = win.selection.pos
 end
