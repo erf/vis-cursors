@@ -66,6 +66,10 @@ end
 -- set cursor pos on close
 local on_win_close = function(win)
 
+	if win.file == nil or win.file.path == nil then
+		return
+	end
+
 	-- re-read files in case they've changed
 	read_files()
 
@@ -78,10 +82,6 @@ local on_win_close = function(win)
 
 	-- insert current path to top of files
 	table.insert(files, 1, win.file.path)
-
-	if win.file == nil or win.file.path == nil then
-		return
-	end
 
  	-- set cursor pos for current file path
 	cursors[win.file.path] = win.selection.pos
