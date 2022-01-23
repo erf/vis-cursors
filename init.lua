@@ -10,18 +10,6 @@ end
 
 M.path = get_default_cache_path()
 
-local apply_cursor_pos = function(win)
-	if win.file == nil or win.file.path == nil then
-		return
-	end
-	local pos = cursors[win.file.path]
-	if pos == nil then
-		return
-	end
-	win.selection.pos = tonumber(pos)
-	vis:feedkeys("zz")
-end
-
 local read_cursors = function()
 	local f = io.open(M.path)
 	if f == nil then
@@ -34,6 +22,26 @@ local read_cursors = function()
 		end
 	end
 	f:close()
+end
+
+local apply_cursor_pos = function(win)
+	if win.file == nil or win.file.path == nil then
+		return
+	end
+	local pos = cursors[win.file.path]
+	if pos == nil then
+		return
+	end
+	win.selection.pos = tonumber(pos)
+	vis:feedkeys("zz")
+end
+
+local set_cursor_pos = function(win)
+	if win.file == nil or win.file.path == nil then
+		return
+	end
+ 	-- set cursor pos for current file path
+	cursors[win.file.path] = win.selection.pos
 end
 
 local write_cursors = function()
@@ -58,14 +66,6 @@ local write_cursors = function()
 	local s = table.concat(t, '\n')
 	f:write(s)
 	f:close()
-end
-
-local set_cursor_pos = function(win)
-	if win.file == nil or win.file.path == nil then
-		return
-	end
- 	-- set cursor pos for current file path
-	cursors[win.file.path] = win.selection.pos
 end
 
 vis.events.subscribe(vis.events.INIT, read_cursors)
