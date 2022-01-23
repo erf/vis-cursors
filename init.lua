@@ -1,7 +1,6 @@
 local M = {}
 local cursors = {}
 local files = {}
-M.maxsize = 1000
 
 -- get the default system cache directory
 local get_default_cache_path = function()
@@ -11,7 +10,11 @@ local get_default_cache_path = function()
 	return BASE .. '/.vis-cursors'
 end
 
+-- default save path
 M.path = get_default_cache_path()
+
+-- default maxsize
+M.maxsize = 1000
 
 -- read cursors from file on init
 local on_init = function()
@@ -51,15 +54,17 @@ local on_win_open = function(win)
 	-- insert current path to top of files
 	table.insert(files, 1, win.file.path)
 
-	-- 
+	-- init cursor path if nil
 	local pos = cursors[win.file.path]
 	if pos == nil then
 		cursors[win.file.path] = win.selection.pos
 		return
 	end
 
+	-- set current cursor
 	win.selection.pos = tonumber(pos)
 
+	-- center view around cursor
 	vis:feedkeys("zz")
 end
 
