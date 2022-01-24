@@ -6,7 +6,7 @@ Default save path is `{XDG_CACHE_HOME|HOME}/.vis-cursors`
 
 You can set a custom save path with `M.path`
 
-Cursor positions are ordered by the last used file at the top of `.vis-cursors`
-
 Limit the number of file paths by setting `M.maxsize` (default is `1000`)
+
+Cursor positions are ordered by the last used file at the top of `.vis-cursors`
 
