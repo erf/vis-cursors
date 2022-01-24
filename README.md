@@ -4,9 +4,9 @@ A [vis](https://github.com/martanne/vis) [plugin](https://github.com/martanne/vi
 
 Default save path is `{XDG_CACHE_HOME|HOME}/.vis-cursors`
 
-You can set a custom path with `M.path`
+You can set a custom save path with `M.path`
 
 Cursor positions are ordered by the last used file at the top of `.vis-cursors`
 
-You can limit the number of cursors/files by setting `maxsize` (default is 1000)
+Limit the number of file paths by setting `M.maxsize` (default is `1000`)
 
