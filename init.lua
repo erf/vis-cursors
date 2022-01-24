@@ -2,6 +2,9 @@ local M = {}
 local cursors = {}
 local files = {}
 
+-- default maxsize
+M.maxsize = 1000
+
 -- get the default system cache directory
 local get_default_cache_path = function()
 	local HOME = os.getenv('HOME')
@@ -12,9 +15,6 @@ end
 
 -- default save path
 M.path = get_default_cache_path()
-
--- default maxsize
-M.maxsize = 1000
 
 function read_files()
 
@@ -83,7 +83,7 @@ local on_win_close = function(win)
 	-- insert current path to top of files
 	table.insert(files, 1, win.file.path)
 
- 	-- set cursor pos for current file path
+	-- set cursor pos for current file path
 	cursors[win.file.path] = win.selection.pos
 end
 
