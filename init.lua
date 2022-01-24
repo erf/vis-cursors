@@ -19,22 +19,22 @@ M.maxsize = 1000
 function read_files()
 
 	-- read file
-	local f = io.open(M.path)
-	if f == nil then
+	local file = io.open(M.path)
+	if file == nil then
 		return
 	end
 
 	files = {}
 
 	-- read positions per file path
-	for line in f:lines() do
+	for line in file:lines() do
 		for path, pos in string.gmatch(line, '(.+)[,%s](%d+)') do
 			cursors[path] = pos
 			table.insert(files, path)
 		end
 	end
 
-	f:close()
+	file:close()
 end
 
 -- read cursors from file on init
@@ -90,22 +90,22 @@ end
 -- write cursors to file on quit
 local on_quit = function()
 
-	local f = io.open(M.path, 'w+')
-	if f == nil then
+	local file = io.open(M.path, 'w+')
+	if file == nil then
 		return
 	end
 
 	-- buffer cursors string
-	local t = {}
+	local buffer = {}
 	for i, path in ipairs(files) do
-		table.insert(t, string.format('%s,%d', path, cursors[path]))
-		if M.maxsize and #t >= M.maxsize then
+		table.insert(buffer, string.format('%s,%d', path, cursors[path]))
+		if M.maxsize and #buffer >= M.maxsize then
 			break
 		end
 	end
-	local s = table.concat(t, '\n')
-	f:write(s)
-	f:close()
+	local output = table.concat(buffer, '\n')
+	file:write(output)
+	file:close()
 end
 
 vis.events.subscribe(vis.events.INIT, on_init)
