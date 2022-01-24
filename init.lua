@@ -97,11 +97,9 @@ local on_quit = function()
 
 	-- buffer cursors string
 	local t = {}
-	local n = 0
 	for i, path in ipairs(files) do
 		table.insert(t, string.format('%s,%d', path, cursors[path]))
-		n = n + 1
-		if M.maxsize and n >= M.maxsize then
+		if M.maxsize and #t >= M.maxsize then
 			break
 		end
 	end
