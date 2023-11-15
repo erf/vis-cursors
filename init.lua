@@ -80,6 +80,12 @@ local on_win_close = function(win)
 		end
 	end
 
+	-- ignore files with cursor at the beginning
+	if win.selection.pos == 0 then
+		return
+	end
+
+
 	-- insert current path to top of files
 	table.insert(files, 1, win.file.path)
 
