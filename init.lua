@@ -38,9 +38,7 @@ local function read_files()
 end
 
 -- read cursors from file on init
-local on_init = function()
-	read_files()
-end
+local on_init = read_files
 
 -- apply cursor pos on win open
 local on_win_open = function(win)
