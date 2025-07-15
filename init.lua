@@ -87,9 +87,6 @@ local on_win_close = function(win)
 		return
 	end
 
-	-- re-read files in case they've changed
-	read_files()
-
 	-- remove old occurences of current path
 	for i, path in ipairs(files) do
 		if path == win.file.path then
