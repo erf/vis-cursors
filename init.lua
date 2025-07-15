@@ -87,13 +87,6 @@ local on_win_close = function(win)
 		return
 	end
 
-	-- remove old occurences of current path
-	for i, path in ipairs(files) do
-		if path == win.file.path then
-			table.remove(files, i)
-		end
-	end
-
 	-- ignore files with cursor at the beginning
 	if win.selection.pos == 0 then
 		return
@@ -102,9 +95,6 @@ local on_win_close = function(win)
 	if is_file_ignored(win.file.path) then
 		return
 	end
-
-	-- insert current path to top of files
-	table.insert(files, 1, win.file.path)
 
 	-- set cursor pos for current file path
 	cursors[win.file.path] = win.selection.pos
