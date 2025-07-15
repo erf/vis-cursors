@@ -1,6 +1,5 @@
 local M = {}
 local cursors = {}
-local files = {}
 
 -- default maxsize
 M.maxsize = 1000
@@ -29,14 +28,13 @@ local function read_files()
 	if file == nil then
 		return
 	end
-
-	files = {}
+	
+	cursors = {}
 
 	-- read positions per file path
 	for line in file:lines() do
 		local path, pos = string.match(line, '^(.+)[,%s](%d+)$')
 		cursors[path] = pos
-		table.insert(files, path)
 	end
 
 	file:close()
@@ -109,8 +107,8 @@ local on_quit = function()
 
 	-- buffer cursors string
 	local buffer = {}
-	for i, path in ipairs(files) do
-		table.insert(buffer, string.format('%s,%d', path, cursors[path]))
+	for path, pos in pairs(cursors) do
+		table.insert(buffer, string.format('%s,%d', path, pos))
 		if M.maxsize and #buffer >= M.maxsize then
 			break
 		end
