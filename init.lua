@@ -85,11 +85,6 @@ local on_win_close = function(win)
 		return
 	end
 
-	-- ignore files with cursor at the beginning
-	if win.selection.pos == 0 then
-		return
-	end
-
 	if is_file_ignored(win.file.path) then
 		return
 	end
