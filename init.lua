@@ -1,9 +1,6 @@
 local M = {}
 local cursors = {}
 
--- default maxsize
-M.maxsize = 1000
-
 -- get the default system cache directory
 local get_default_cache_path = function()
 	local HOME = os.getenv("HOME")
@@ -104,9 +101,6 @@ local on_quit = function()
 	local buffer = {}
 	for path, pos in pairs(cursors) do
 		table.insert(buffer, string.format('%s,%d', path, pos))
-		if M.maxsize and #buffer >= M.maxsize then
-			break
-		end
 	end
 	local output = table.concat(buffer, '\n')
 	file:write(output)
